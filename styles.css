@@ -1,0 +1,53 @@
+.page {
+    display: flex;
+    flex-direction: row;
+}
+
+.left_content {
+    flex: 1;
+    flex-basis: 200px;
+}
+
+.main_content {
+    flex: 5;
+    flex-basis: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.right_content {
+    flex: 1;
+    flex-basis: 200px;
+}
+
+.grid {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border: solid 2px black;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 1;
+}
+
+.cell {
+    border: solid 1px lightgray;
+    background-color: white;
+    flex: 1 0 auto;
+    aspect-ratio: 1 / 1 ;
+}
+
+.form_title {
+    text-align: center;
+    margin: 5px;
+}
+
+form {
+    margin: 15px;
+}
