@@ -1,5 +1,9 @@
-make_grid(16);
-enable_input();
+let currentInkEffect = "black-ink";
+let currentCells = 16;
+
+make_grid(currentCells, currentInkEffect);
+enable_form();
+enable_buttons();
 
 function make_grid(n) {
     if (!checkCellRange(n)) {return}
@@ -11,11 +15,12 @@ function make_grid(n) {
         for (let j = 0; j < n; j++) {
             const cell = document.createElement("div");
             cell.className = "cell";
+            cell.setAttribute("style", `opacity:1`);
             row.appendChild(cell);
         }
         grid.appendChild(row);
     }
-    makeAllCellsResponsive("black");
+    makeAllCellsResponsive("black", currentInkEffect);
 }
 
 function checkCellRange(n) {
@@ -38,7 +43,7 @@ function clear_grid() {
     }
 }
 
-function enable_input() {
+function enable_form() {
     document.querySelector('form').addEventListener('submit', e => {
         e.preventDefault();
         const data = new FormData(e.target);
@@ -47,22 +52,77 @@ function enable_input() {
       }); 
 }
 
-function applyDefaultGridBehaviour () {
-    // applyGridBehaviour((cell) => setCellColor(cell, "black;"));
+function enable_buttons() {
+    const buttons = Array.from(document.querySelector(".buttons").children);
+    buttons.forEach((button) => button.addEventListener('click', () => {
+        currentInkEffect = button.id;
+    }));
 }
 
-function applyGridBehaviour (fn) {
-    // const cells = document.querySelectorAll(".cell");
-    // cells.forEach((cell) => cell.addEventListener('click', (cell) => fn(cell)));
+function updateCellEffect(cell, color) {
+    switch (currentInkEffect) {
+        case "black-ink":
+            cell.setAttribute("style", `background-color:${color}`);
+            break;
+        case "rainbow-ink":
+            color = randomColor();
+            cell.setAttribute("style", `background-color:${color}`);
+            break;
+        case "gradual-ink":
+            console.log(getComputedStyle(cell)["background-color"]);
+            console.log(getComputedStyle(cell)["opacity"]);
+            if (getComputedStyle(cell)["background-color"] === "rgb(0, 0, 0)") {
+                let opacity = getComputedStyle(cell)["opacity"];                
+                if (opacity === "1") {
+                    break;
+                }
+                cell.style.opacity = parseFloat(cell.style.opacity) + 0.1
+                break;
+            }
+            // cell.setAttribute("style", `background-color:black; opacity:0.1`);
+            cell.setAttribute("style", `background-color:black`);
+            cell.style.opacity = 0.1;
+            break;
+        default:
+    }
 }
 
-function fillCell(cell, color) {
-    console.log(color);
-    cell.setAttribute("style", `background-color:${color}`);
+function randomColor() {
+    // REFACTOR: write function getRandomElement(array) or similar
+    var result = Math.random() * 10;
+    if (result >= 9) {
+        return "blue";
+    }
+    else if (result >= 8) {
+        return "green";
+    }
+    else if (result >= 7) {
+        return "tomato";
+    }
+    else if (result >= 6) {
+        return "indigo";
+    }
+    else if (result >= 5) {
+        return "cornsilk";
+    }
+    else if (result >= 4) {
+        return "crimson";
+    }
+    else if (result >= 3) {
+        return "aquamarine";
+    }
+    else if (result >= 2) {
+        return "pink";
+    }
+    else if (result >= 1) {
+        return "magenta";
+    } else {
+        return "cyan";
+    }   
 }
 
-function makeCellResponsive (cell, color) {
-    cell.addEventListener('mouseenter', (e) => fillCell(cell, color))
+function makeCellResponsive (cell, color, inkEffect) {
+    cell.addEventListener('mouseenter', (e) => updateCellEffect(cell, color));
 }
 
 function makeAllCellsResponsive(color) {
